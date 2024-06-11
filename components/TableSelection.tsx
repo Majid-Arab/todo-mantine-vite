@@ -7,9 +7,9 @@ import {
   Text,
   rem,
   Button,
-  Input,
   Radio,
 } from "@mantine/core";
+import { TodoInput } from "./TodoInput";
 
 type Todo = {
   id: number;
@@ -142,24 +142,17 @@ export function TableSelection() {
   return (
     <ScrollArea>
       <Group>
-        <Input
-          placeholder="Input component"
-          type="text"
+        <TodoInput
           value={todo}
+          onClick={addTodo}
           onChange={(e) => setTodo(e.target.value)}
         />
-        <Button variant="filled" c="cyan" onClick={addTodo}>
-          Add
-        </Button>
-        <Input
-          placeholder="Input component"
-          type="text"
+        <TodoInput
           value={edit?.todo}
+          onClick={handleEdit}
           onChange={(e) => setEdit({ ...edit!, todo: e.target.value })}
         />
-        <Button variant="filled" onClick={handleEdit}>
-          Edit
-        </Button>
+
         <Radio
           label="All"
           checked={filter === "all"}
