@@ -1,36 +1,30 @@
 import { TextInput, TagsInput, Button, Group } from "@mantine/core";
-import { useState } from "react";
+import React, { useState } from "react";
 
 type Poll = {
   id: number;
   question: string;
-  answers: string[];
+  answers: { option: string; votes: number }[];
   createdAt?: Date;
 };
 
-const data: Poll[] = [
-  {
-    id: 1,
-    question: "What is JS fullform",
-    answers: ["Jason", "JavaScript", "jackset"],
-    createdAt: new Date(),
-  },
-];
+type CreatePollProps = {
+  setPolls: React.Dispatch<React.SetStateAction<Poll[]>>;
+};
 
-export default function CreatePoll() {
-  const [polls, setPolls] = useState<Poll[]>(data);
-  const [input, setInput] = useState("");
-  const [tag, setTag] = useState([""]);
+export default function CreatePoll({ setPolls }: CreatePollProps) {
+  const [input, setInput] = useState<string>("");
+  const [tag, setTag] = useState<string[]>([]);
 
   function createPoll() {
     const newPoll: Poll = {
       id: Math.random(),
       question: input,
-      answers: tag,
+      answers: tag.map((option) => ({ option, votes: 0 })),
+      createdAt: new Date(),
     };
 
-    setPolls([...polls, newPoll]);
-    console.log("created");
+    setPolls((prevPolls) => [...prevPolls, newPoll]);
   }
 
   return (
@@ -41,11 +35,9 @@ export default function CreatePoll() {
         onChange={(e) => setInput(e.target.value)}
       />
       <TagsInput
-        placeholder="Enter tags"
-        maxTags={4}
         value={tag}
         onChange={(newTags) => setTag(newTags)}
-        clearable
+        placeholder="Enter options"
       />
       <Button onClick={createPoll}>Create Poll</Button>
     </Group>
