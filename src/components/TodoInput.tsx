@@ -1,4 +1,4 @@
-import { TextInput, Button } from "@mantine/core";
+import { TextInput, Button, Box } from "@mantine/core";
 import React from "react";
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 
 export function TodoInput({ value, onChange, onClick }: Props) {
   return (
-    <>
+    <Box>
       <TextInput
         placeholder="Input component"
         type="text"
@@ -19,6 +19,6 @@ export function TodoInput({ value, onChange, onClick }: Props) {
       <Button variant="filled" onClick={onClick}>
         Add
       </Button>
-    </>
+    </Box>
   );
 }
