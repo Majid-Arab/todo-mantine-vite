@@ -71,7 +71,7 @@ function Expense() {
         ))}
       </Card.Section>
       <Card.Section>
-        <Text>New Transaction</Text>
+        <Text>Add New Transaction</Text>
         <TextInput
           label="Title"
           placeholder="Input placeholder"
