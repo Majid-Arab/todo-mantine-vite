@@ -2,75 +2,64 @@ import {
   Card,
   Text,
   Button,
-  SimpleGrid,
-  Title,
   List,
   TextInput,
+  NumberInput,
 } from "@mantine/core";
 import { useState } from "react";
+import Balance from "./Balance";
+import Income from "./Income";
 
 type ExpenseTracks = {
   id: number;
   title: string;
-  amount: string;
+  amount: number;
 };
 
 function Expense() {
   const [tracks, setTracks] = useState<ExpenseTracks[]>([]);
   const [reason, setReason] = useState("");
-  const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(0);
 
   function deposit() {
     const newExpense: ExpenseTracks = {
       id: Math.random(),
       title: reason,
-      amount: amount,
+      amount: +amount.toFixed(2),
     };
     setTracks([...tracks, newExpense]);
-    console.log(newExpense);
+    setReason("");
+    setAmount(0);
   }
 
-  // function handleDelete(id: number) {
-  //   const delete = tracks((e: number) => e.id !== id);
-  //   setTodos(delete);
-  // }
-  // const sign = tracks.amount < 0 ? "-" : "+";
+  const { income, expense, balance } = tracks.reduce(
+    (accumulator, currentValue) => {
+      if (currentValue.amount > 0) {
+        accumulator.income += currentValue.amount;
+      } else {
+        accumulator.expense += currentValue.amount;
+      }
+      accumulator.balance = accumulator.income - Math.abs(accumulator.expense);
+      return accumulator;
+    },
+    { income: 0, expense: 0, balance: 0 }
+  );
 
   return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
-      <Card.Section>
-        <Title>Expense Tracker</Title>
-
-        <Text>Your Balance</Text>
-        <Title>$250.00</Title>
-      </Card.Section>
-      <Card.Section>
-        <SimpleGrid cols={2}>
-          <div>
-            <Title>Income</Title>
-            <Title>$250.00</Title>
-          </div>
-          <div>
-            <Title>Income</Title>
-            <Title>$250.00</Title>
-          </div>
-        </SimpleGrid>
-      </Card.Section>
-      <Card.Section>
+    <Card shadow="sm" padding="lg" radius="md" withBorder w={500} m={"auto"}>
+      <Balance balance={balance} />
+      <Income income={income} expense={expense} />
+      <Card.Section withBorder inheritPadding>
         <Text>History</Text>
         {tracks.map((tracks) => (
           <List key={tracks.id}>
-            <List.Item className={tracks.amount < "0" ? "minus" : "plus"}>
-              {tracks.title}{" "}
-              <span>
-                {tracks.amount}
-                {/* {sign}${Math.abs(tracks.amount)} */}
-              </span>
+            <List.Item>
+              {tracks.title} <span>{tracks.amount}</span>
             </List.Item>
           </List>
         ))}
       </Card.Section>
-      <Card.Section>
+      <Card.Section withBorder inheritPadding>
         <Text>Add New Transaction</Text>
         <TextInput
           label="Title"
@@ -78,11 +67,11 @@ function Expense() {
           value={reason}
           onChange={(e) => setReason(e.target.value)}
         />
-        <TextInput
+        <NumberInput
           label="Amount"
           placeholder="Input placeholder"
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          onChange={(e) => setAmount(+e)}
         />
         <Button onClick={deposit}>Add</Button>
       </Card.Section>
