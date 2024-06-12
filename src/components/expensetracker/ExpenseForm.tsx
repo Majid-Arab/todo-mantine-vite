@@ -1,30 +1,36 @@
-import { TextInput, Button, Box, NumberInput } from "@mantine/core";
-import React from "react";
+import { TextInput, Text, Button, NumberInput, Card } from "@mantine/core";
 
-type Props = {
-  value: string | undefined;
+type Form = {
+  amount: number;
+  reason: string;
   onChange: React.ChangeEventHandler<HTMLInputElement> | undefined;
-  onClick: () => void;
+  onAmountChange: ((value: string | number) => void) | undefined;
+  onAdd: () => void;
 };
 
-export function ExpenseForm({ value, onChange, onClick }: Props) {
+export function ExpenseForm({
+  amount,
+  reason,
+  onChange,
+  onAmountChange,
+  onAdd,
+}: Form) {
   return (
-    <Box>
+    <Card.Section withBorder inheritPadding>
+      <Text>Add New Transaction</Text>
       <TextInput
-        placeholder="Input component"
-        type="text"
-        value={value}
+        label="Title"
+        placeholder="Input placeholder"
+        value={reason}
         onChange={onChange}
       />
       <NumberInput
-        placeholder="Input component"
-        type="text"
-        value={value}
-        onChange={onChange}
+        label="Amount"
+        placeholder="Input placeholder"
+        value={String(amount)}
+        onChange={onAmountChange}
       />
-      <Button variant="filled" onClick={onClick}>
-        Add
-      </Button>
-    </Box>
+      <Button onClick={onAdd}>Add</Button>
+    </Card.Section>
   );
 }

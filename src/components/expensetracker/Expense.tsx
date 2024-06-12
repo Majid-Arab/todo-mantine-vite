@@ -1,14 +1,9 @@
-import {
-  Card,
-  Text,
-  Button,
-  List,
-  TextInput,
-  NumberInput,
-} from "@mantine/core";
+import { Card } from "@mantine/core";
 import { useState } from "react";
 import Balance from "./Balance";
 import Income from "./Income";
+import History from "./History";
+import { ExpenseForm } from "./ExpenseForm";
 
 type ExpenseTracks = {
   id: number;
@@ -48,33 +43,18 @@ function Expense() {
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder w={500} m={"auto"}>
       <Balance balance={balance} />
+
       <Income income={income} expense={expense} />
-      <Card.Section withBorder inheritPadding>
-        <Text>History</Text>
-        {tracks.map((tracks) => (
-          <List key={tracks.id}>
-            <List.Item>
-              {tracks.title} <span>{tracks.amount}</span>
-            </List.Item>
-          </List>
-        ))}
-      </Card.Section>
-      <Card.Section withBorder inheritPadding>
-        <Text>Add New Transaction</Text>
-        <TextInput
-          label="Title"
-          placeholder="Input placeholder"
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-        />
-        <NumberInput
-          label="Amount"
-          placeholder="Input placeholder"
-          value={amount}
-          onChange={(e) => setAmount(+e)}
-        />
-        <Button onClick={deposit}>Add</Button>
-      </Card.Section>
+
+      <History tracks={tracks} />
+
+      <ExpenseForm
+        reason={reason}
+        amount={amount}
+        onAdd={deposit}
+        onAmountChange={(e) => setAmount(+e)}
+        onChange={(e) => setReason(e.target.value)}
+      />
     </Card>
   );
 }
