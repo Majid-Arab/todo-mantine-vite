@@ -4,6 +4,7 @@ import Balance from "./Balance";
 import Income from "./Income";
 import History from "./History";
 import { ExpenseForm } from "./ExpenseForm";
+import { useTracker } from "../../store";
 
 type ExpenseTracks = {
   id: number;
@@ -16,16 +17,16 @@ function Expense() {
   const [reason, setReason] = useState("");
   const [amount, setAmount] = useState(0);
 
-  function deposit() {
-    const newExpense: ExpenseTracks = {
-      id: Math.random(),
-      title: reason,
-      amount: +amount.toFixed(2),
-    };
-    setTracks([...tracks, newExpense]);
-    setReason("");
-    setAmount(0);
-  }
+  // function deposit() {
+  //   const newExpense: ExpenseTracks = {
+  //     id: Math.random(),
+  //     title: reason,
+  //     amount: +amount.toFixed(2),
+  //   };
+  //   setTracks([...tracks, newExpense]);
+  //   setReason("");
+  //   setAmount(0);
+  // }
 
   const { income, expense, balance } = tracks.reduce(
     (accumulator, currentValue) => {
@@ -51,7 +52,7 @@ function Expense() {
       <ExpenseForm
         reason={reason}
         amount={amount}
-        onAdd={deposit}
+        // onAdd={}
         onAmountChange={(e) => setAmount(+e)}
         onChange={(e) => setReason(e.target.value)}
       />
