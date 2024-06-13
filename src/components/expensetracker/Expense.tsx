@@ -1,21 +1,12 @@
 import { Card } from "@mantine/core";
-import { useState } from "react";
 import Balance from "./Balance";
 import Income from "./Income";
 import History from "./History";
 import { ExpenseForm } from "./ExpenseForm";
-import { useTracker } from "../../store";
-
-type ExpenseTracks = {
-  id: number;
-  title: string;
-  amount: number;
-};
+import { useExpenseStore } from "../../store";
 
 function Expense() {
-  const [tracks, setTracks] = useState<ExpenseTracks[]>([]);
-  const [reason, setReason] = useState("");
-  const [amount, setAmount] = useState(0);
+  const { tracks } = useExpenseStore((state) => state);
 
   // function deposit() {
   //   const newExpense: ExpenseTracks = {
@@ -49,13 +40,7 @@ function Expense() {
 
       <History tracks={tracks} />
 
-      <ExpenseForm
-        reason={reason}
-        amount={amount}
-        // onAdd={}
-        onAmountChange={(e) => setAmount(+e)}
-        onChange={(e) => setReason(e.target.value)}
-      />
+      <ExpenseForm />
     </Card>
   );
 }

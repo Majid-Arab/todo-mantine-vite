@@ -1,22 +1,11 @@
 import { TextInput, Text, Button, NumberInput, Card } from "@mantine/core";
-import { useTracker } from "../../store";
+import { useExpenseStore } from "../../store";
+import { useState } from "react";
 
-type Form = {
-  amount: number;
-  reason: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement> | undefined;
-  onAmountChange: ((value: string | number) => void) | undefined;
-  // onAdd: () => void;
-};
-
-export function ExpenseForm({
-  amount,
-  reason,
-  onChange,
-  onAmountChange,
-}: // onAdd,
-Form) {
-  const { deposit } = useTracker((state) => state);
+export function ExpenseForm() {
+  const [reason, setReason] = useState("");
+  const [amount, setAmount] = useState(0);
+  const { deposit } = useExpenseStore((state) => state);
   return (
     <Card.Section withBorder inheritPadding>
       <Text>Add New Transaction</Text>
@@ -24,13 +13,13 @@ Form) {
         label="Title"
         placeholder="Input placeholder"
         value={reason}
-        onChange={onChange}
+        onChange={(e) => setReason(e.target.value)}
       />
       <NumberInput
         label="Amount"
         placeholder="Input placeholder"
         value={String(amount)}
-        onChange={onAmountChange}
+        onChange={(e) => setAmount(Number(e))}
       />
       <Button
         onClick={() =>
