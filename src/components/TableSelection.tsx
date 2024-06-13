@@ -10,6 +10,7 @@ import {
   Radio,
 } from "@mantine/core";
 import { TodoInput } from "./TodoInput";
+import { useTodos } from "../store";
 
 type Todo = {
   id: number;
@@ -18,30 +19,12 @@ type Todo = {
   created_at: Date;
 };
 
-const initialData: Todo[] = [
-  {
-    id: 1,
-    todo: "Robert Wolfkisser",
-    completed: false,
-    created_at: new Date(),
-  },
-  {
-    id: 2,
-    todo: "Jill Jailbreaker",
-    completed: false,
-    created_at: new Date(),
-  },
-  {
-    id: 3,
-    todo: "Henry Silkeater",
-    completed: false,
-    created_at: new Date(),
-  },
-];
-
 export function TableSelection() {
-  const [todos, setTodos] = useState<Todo[]>(initialData);
+  const { todos, createTodo, deleteTodo, completeTodo, editTodo } = useTodos(
+    (state) => state
+  );
   const [todo, setTodo] = useState("");
+
   const [edit, setEdit] = useState<Todo>();
   const [selection, setSelection] = useState<string[]>([]);
   const [filter, setFilter] = useState<"all" | "remaining" | "completed">(
@@ -49,21 +32,11 @@ export function TableSelection() {
   );
 
   function addTodo() {
-    const newTodo: Todo = {
-      id: Math.random(),
-      todo,
-      completed: false,
-      created_at: new Date(),
-    };
-    setTodos([...todos, newTodo]);
-    setTodo("");
+    createTodo(todo);
   }
 
   function todoCompleted(checked: boolean, todo: Todo) {
-    const newTodos = todos.map((todoF) =>
-      todoF.id === todo.id ? { ...todoF, completed: checked } : todoF
-    );
-    setTodos(newTodos);
+    completeTodo(checked, todo);
   }
 
   const toggleRow = (id: string) =>
@@ -76,7 +49,7 @@ export function TableSelection() {
   const toggleAll = () => {
     if (selection.length === todos.length) {
       setSelection([]);
-      setTodos(todos.map((todo) => ({ ...todo, completed: false })));
+      // setTodos(todos.map((todo) => ({ ...todo, completed: false })));
     } else {
       setSelection(todos.map((todo) => todo.id.toString()));
     }
@@ -87,18 +60,7 @@ export function TableSelection() {
   }
 
   function handleEdit() {
-    const task = todos.map((todoE) => {
-      if (edit?.id === todoE.id) {
-        todoE.todo = edit.todo;
-      }
-      return todoE;
-    });
-    setTodos(task);
-  }
-
-  function handleDelete(id: number) {
-    const deleteTodo = todos.filter((item) => item.id !== id);
-    setTodos(deleteTodo);
+    if (edit) editTodo(edit);
   }
 
   const filteredTodos = todos.filter((todo) => {
@@ -132,7 +94,7 @@ export function TableSelection() {
         <Button variant="filled" onClick={() => handleEditValue(todo)}>
           Edit
         </Button>
-        <Button variant="danger" onClick={() => handleDelete(todo.id)}>
+        <Button variant="danger" onClick={() => deleteTodo(todo.id)}>
           Delete
         </Button>
       </Table.Td>
