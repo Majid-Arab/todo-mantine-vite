@@ -1,34 +1,8 @@
 import { Box, Paper, Text, Group, Button, Progress } from "@mantine/core";
+import { usePolls } from "../../store";
 
-type Poll = {
-  id: number;
-  question: string;
-  answers: { option: string; votes: number }[];
-  createdAt?: Date;
-};
-
-type PollListProps = {
-  polls: Poll[];
-  setPolls: React.Dispatch<React.SetStateAction<Poll[]>>;
-};
-
-export default function PollList({ polls, setPolls }: PollListProps) {
-  function vote(pollId: number, answerIndex: number) {
-    setPolls((prevPolls) =>
-      prevPolls.map((poll) =>
-        poll.id === pollId
-          ? {
-              ...poll,
-              answers: poll.answers.map((answer, index) =>
-                index === answerIndex
-                  ? { ...answer, votes: answer.votes + 1 }
-                  : answer
-              ),
-            }
-          : poll
-      )
-    );
-  }
+export default function PollList() {
+  const { polls, vote } = usePolls((state) => state);
 
   return (
     <Box>
